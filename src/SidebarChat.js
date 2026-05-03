@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { collection, onSnapshot, orderBy, query, addDoc } from "firebase/firestore";
 import "./SidebarChat.css";
 import { Avatar } from "@material-ui/core";
 import db from "./firebase"
@@ -9,24 +10,25 @@ function SidebarChat({ id, name, addNewChat }) {
   const [messages, setMessages] = useState("");
   useEffect(() => {
     if (id) {
-      db.collection('rooms')
-        .doc(id)
-        .collection('messages')
-        .orderBy('timestamp', "desc")
-        .onSnapshot((snapshot) =>
-          setMessages(snapshot.docs.map((doc) =>
-            doc.data()))
-        );
+      const messagesQuery = query(
+        collection(db, 'rooms', id, 'messages'),
+        orderBy('timestamp', "desc")
+      );
+      const unsubscribe = onSnapshot(messagesQuery, (snapshot) =>
+        setMessages(snapshot.docs.map((doc) =>
+          doc.data()))
+      );
+      return () => unsubscribe();
     }
   }, [id]);
 
   useEffect(() => {
     setSeed(Math.floor(Math.random() * 3000));
   }, []);
-  const createChat = () => {
+  const createChat = async () => {
     const roomName = prompt("please enter a name for chat");
     if (roomName) {
-      db.collection("rooms").add({
+      await addDoc(collection(db, "rooms"), {
         name: roomName,
       });
     }

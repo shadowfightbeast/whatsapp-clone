@@ -1,19 +1,20 @@
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-import firebase  from 'firebase'
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 const firebaseConfig = {
-    apiKey: "AIzaSyBY8e5ndRC1fIOA6FDcQMPa80zIdJXM3Gc",
-    authDomain: "whatsapp-clone-aebfb.firebaseapp.com",
-    projectId: "whatsapp-clone-aebfb",
-    storageBucket: "whatsapp-clone-aebfb.appspot.com",
-    messagingSenderId: "108557410849",
-    appId: "1:108557410849:web:78140a3a8a3c114af5f960",
-    measurementId: "G-MYBXTK8F6D"
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_FIREBASE_APP_ID,
+    measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
   };
 
-const firebaseApp=firebase.initializeApp(firebaseConfig);
-const db=firebaseApp.firestore();
-const auth=firebase.auth();
-const provider=new firebase.auth.GoogleAuthProvider();
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
 export {auth,provider};
 export default db;

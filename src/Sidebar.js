@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { collection, onSnapshot } from "firebase/firestore";
 import "./Sidebar.css";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
@@ -15,7 +16,8 @@ function Sidebar() {
   const [rooms, setRooms] = useState([]);
   const [{user},dispatch] =useStateValue();
   useEffect(() => {
-    db.collection('rooms').onSnapshot((snapshot) =>
+    const roomsCollection = collection(db, 'rooms');
+    const unsubscribe = onSnapshot(roomsCollection, (snapshot) =>
       setRooms(
         snapshot.docs.map((doc) =>
         ({
@@ -24,6 +26,7 @@ function Sidebar() {
         }))
        )
     );
+    return () => unsubscribe();
   }, [])
 
   return (
